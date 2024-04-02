@@ -29,8 +29,8 @@ String temperatureC = "";
 unsigned long lastTime = 0;  
 unsigned long timerDelay = 2000;
 
-const char* ssid = "!nyDgaM"; //kkk
-const char* password = "M@gn3t0!";
+const char* ssid = "xxx"; //kkk
+const char* password = "xxx";
 const IPAddress staticIP(192, 168, 6, 206);
 const IPAddress gateway(192, 168, 6, 1);
 const IPAddress subnet(255, 255, 255, 0);
@@ -158,6 +158,12 @@ void loop(){
     if (millis() > t + serialPrintInterval) {
       long k = LoadCell.smoothedData(); // get raw data from load cell
       Serial.print("Raw Data : "); Serial.println(k);
+      if (k>80000){
+        Serial.print("your processs");
+      }
+      else{
+         Serial.print("your processs");
+      }
       temperatureC = readDSTemperatureC();
       newDataReady = 0;
       t = millis();
