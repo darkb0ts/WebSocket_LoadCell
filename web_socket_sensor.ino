@@ -39,8 +39,8 @@ const IPAddress subnet(255, 255, 255, 0);
 AsyncWebServer server(80);
 
 String readDSTemperatureC() {
-  // Call sensors.requestTemperatures() to issue a global temperature and Requests to all devices on the bus
-  long k = LoadCell.smoothedData();
+  //* read load cell data using HX711_ADC.h
+  long k = LoadCell.smoothedData(); //* smoothed data is get data .modifed HX711_ADC.h module for data raw data.
   return String(k);
 }
 
