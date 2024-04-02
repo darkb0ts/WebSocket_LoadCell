@@ -1,7 +1,3 @@
-/*********
-  Rui Santos
-  Complete project details at https://RandomNerdTutorials.com  
-*********/
 
 // Import required libraries
 
@@ -25,15 +21,11 @@ unsigned long t = 0;
 // Variables to store temperature values
 String temperatureC = "";
 
-// Timer variables
-unsigned long lastTime = 0;  
-unsigned long timerDelay = 2000;
-
-const char* ssid = "xxx"; //kkk
-const char* password = "xxx";
-const IPAddress staticIP(192, 168, 6, 206);
-const IPAddress gateway(192, 168, 6, 1);
-const IPAddress subnet(255, 255, 255, 0);
+const char* ssid = "xxx"; //enter your ssid
+const char* password = "xxx"; //enter your password
+const IPAddress staticIP(192, 168, 6, 206);  //* hardcode ip address
+const IPAddress gateway(192, 168, 6, 1); //* hardcore gateway
+const IPAddress subnet(255, 255, 255, 0);//* hardcore subnet
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -41,10 +33,10 @@ AsyncWebServer server(80);
 String readDSTemperatureC() {
   //* read load cell data using HX711_ADC.h
   long k = LoadCell.smoothedData(); //* smoothed data is get data .modifed HX711_ADC.h module for data raw data.
-  return String(k);
+  return String(k); //* return load cell str data
 }
 
-
+//* html page for web page
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html>
 <head>
@@ -88,7 +80,7 @@ setInterval(function ( ) {
 </script>
 </html>)rawliteral";
 
-// Replaces placeholder with DS18B20 values
+// Replaces placeholder with esp32 values
 String processor(const String& var){
   //Serial.println(var);
   if(var == "TEMPERATUREC"){
@@ -99,18 +91,15 @@ String processor(const String& var){
 
 void setup(){
 Serial.begin(115200);
-pinMode(LED_BUILTIN, OUTPUT);
+pinMode(LED_BUILTIN, OUTPUT); // set inbuild led in esp32
   Serial.print("Connecting to ");
   Serial.println(ssid);
   LoadCell.begin();
-  //LoadCell.setReverseOutput(); //uncomment to turn a negative output value to positive
   float calibrationValue; // calibration value (see example file "Calibration.ino")
   calibrationValue = 106.0; // uncomment this if you want to set the calibration value in the sketch
   #if defined(ESP8266)|| defined(ESP32)
-  //EEPROM.begin(512); // uncomment this if you use ESP8266/ESP32 and want to fetch the calibration value from eeprom
   #endif
   unsigned long stabilizingtime = 2000; // preciscion right after power-up can be improved by adding a few seconds of stabilizing time
-  boolean _tare = true; //set this to false if you don't want tare to be performed in the next step
   LoadCell.start(stabilizingtime, _tare);
   if (LoadCell.getTareTimeoutFlag()) {
     Serial.println("Timeout, check MCU>HX711 wiring and pin designations");
@@ -121,27 +110,27 @@ pinMode(LED_BUILTIN, OUTPUT);
     Serial.println("Startup is complete");
   }
 
-  temperatureC = readDSTemperatureC();
+  temperatureC = readDSTemperatureC();  //* first time showing in web browser with async server
 
   // Connect to Wi-Fi
-  WiFi.config(staticIP, gateway, subnet);
+  WiFi.config(staticIP, gateway, subnet);        //* set manual wifi ip and gateway and subnet
   WiFi.begin(ssid, password);
   Serial.println("Connecting to WiFi");
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED) {         //* check the wifi is connect or wait for 500 sec milies second 
     Serial.print("......");
     delay(500);
   }
   Serial.println("connect");
-  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(LED_BUILTIN, HIGH);          //* if wifi is connect esp32 inbuild led on
   
   // Print ESP Local IP Address
-  Serial.println(WiFi.localIP());
+  Serial.println(WiFi.localIP());             //* print ip address in serial
 
   // Route for root / web page
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){               //* main screen for web browser
     request->send_P(200, "text/html", index_html, processor);
   });
-  server.on("/temperaturec", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/temperaturec", HTTP_GET, [](AsyncWebServerRequest *request){  //* api for load cell data [/temperaturec]
     request->send_P(200, "text/plain", temperatureC.c_str());
   });
   // Start server
@@ -164,7 +153,7 @@ void loop(){
       else{
          Serial.print("your processs");
       }
-      temperatureC = readDSTemperatureC();
+      temperatureC = readDSTemperatureC(); //@@ get data from load cell and update in web browser
       newDataReady = 0;
       t = millis();
     }
