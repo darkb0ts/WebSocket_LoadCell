@@ -32,7 +32,7 @@ AsyncWebServer server(80);
 
 String readDSTemperatureC() {
   //* read load cell data using HX711_ADC.h
-  long k = LoadCell.smoothedData(); //* smoothed data is get data .modifed HX711_ADC.h module for data raw data.
+  long k = LoadCell.smoothedData(); //* smoothed data is get data .modifed HX711_ADC.h module for get raw data from load cell.
   return String(k); //* return load cell str data
 }
 
