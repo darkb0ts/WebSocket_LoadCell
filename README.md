@@ -1,3 +1,4 @@
+[![SVG Banners](https://github.com/darkb0ts/WebSocket_LoadCell/blob/main/load_cell.PNG)
 Description: This code appears to be for an ESP32 development board interfaced with a load cell to create a weight scale. It also includes functionalities for WiFi connectivity and displaying weight readings on a web page.
 
 Hardware Components:
